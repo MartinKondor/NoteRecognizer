@@ -18,16 +18,14 @@ class Display:
         color_constant = 255 / 12
 
         self.note_names = [
-            font.render(n, False, (37, 37, 37)) for n in [
-                'A', 'A# / Bb', 'B',
-                'C', 'Db / C#', 'D',
-                'Eb / D#', 'E', 'F',
-                'Gb / F#', 'G', 'Ab / G#'
-            ]
+            'A', 'Bb / A#', 'B',
+            'C', 'Db / C#', 'D',
+            'Eb / D#', 'E', 'F',
+            'Gb / F#', 'G', 'Ab / G#'
         ]
+        self.note_texts = [font.render(n, False, (37, 37, 37)) for n in self.note_names]
         self.pitch_lines = [
-            # ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
-            ((0, 0, 0,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
         ]
         
         # Reverse lines to not overlap each other
@@ -47,7 +45,8 @@ class Display:
                 winsound.Beep(freq, 100)
                 
             # Draw note name
-            screen.blit(self.note_names[i], pitch_line_coords)
+            text_coords = (pitch_line_coords[0] + WINDOW_WIDTH / 2 - len(self.note_names[i]) * 3, pitch_line_coords[1],)
+            screen.blit(self.note_texts[i], text_coords)
 
         print('Recognized note:', self.note_recognizer.update())
 
