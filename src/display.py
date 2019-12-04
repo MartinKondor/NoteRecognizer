@@ -25,7 +25,8 @@ class Display:
         ]
         self.note_texts = [font.render(n, False, (37, 37, 37)) for n in self.note_names]
         self.pitch_lines = [
-            ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            # ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            ((i * color_constant, i * color_constant, i * color_constant,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
         ]
         
         # Reverse lines to not overlap each other

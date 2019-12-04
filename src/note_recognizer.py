@@ -1,3 +1,5 @@
+import time
+
 import queue
 import numpy as np
 import sounddevice as sd
@@ -21,6 +23,9 @@ class NoteRecognizer:
                                     channels=self.channels,
                                     samplerate=self.samplerate,
                                     callback=self._audio_callback)
+        self.stream.start()
+        self.timer = time.time()
+        self.counter = 0
 
     def _audio_callback(self, indata, frames, time, status):
         """
@@ -44,5 +49,16 @@ class NoteRecognizer:
             shift = len(data)
             self.data = np.roll(self.data, -shift, axis=0)
             self.data[-shift:, :] = data
-            
-        return np.max(self.data[:, 0]) + np.max(self.data[:, 1])
+
+        val = 100 * np.max(self.data)
+
+        if val > 7:
+            self.counter += 1
+
+        # Check in every second
+        if time.time() - self.timer > 1:
+            self.timer = time.time()
+            print(self.counter)
+            self.counter = 0
+
+        return val

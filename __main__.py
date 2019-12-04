@@ -42,12 +42,12 @@ if __name__ == '__main__':
     pygame.mouse.set_visible(1)
     clock = pygame.time.Clock()
     display = Display()
-
-    with display.note_recognizer.stream:
-        while check_events():
-            display.display(screen)
-            clock.tick(FPS)
-            pygame.display.update()
-            pygame.display.flip()
-        
+    
+    while check_events():
+        display.display(screen)
+        clock.tick(FPS)
+        pygame.display.update()
+        pygame.display.flip()
+    
+    display.note_recognizer.stream.close()
     pygame.quit()
