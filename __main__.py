@@ -22,9 +22,11 @@ if __name__ == '__main__':
     if not pygame.mixer:
         print('ERROR: sounds are disabled')
         exit(1)
+    """
     if WINDOW_HEIGHT < 600:
         print(f'Invalid window height ({WINDOW_HEIGHT}) it must be > 600')
         exit(1)
+    """
     if FPS < 30:
         FPS = 30
         
@@ -41,10 +43,11 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     display = Display()
 
-    while check_events():
-        display.display(screen)
-        clock.tick(FPS)
-        pygame.display.update()
-        pygame.display.flip()
+    with display.note_recognizer.stream:
+        while check_events():
+            display.display(screen)
+            clock.tick(FPS)
+            pygame.display.update()
+            pygame.display.flip()
         
     pygame.quit()

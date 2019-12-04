@@ -26,7 +26,8 @@ class Display:
             ]
         ]
         self.pitch_lines = [
-            ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            # ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            ((0, 0, 0,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
         ]
         
         # Reverse lines to not overlap each other
