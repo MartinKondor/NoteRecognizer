@@ -3,6 +3,11 @@ import time
 import queue
 import numpy as np
 import sounddevice as sd
+import scipy
+from scipy import fftpack
+
+
+sol = 299792458 / 100000  # This is the speed of light in nm/s
 
 
 class NoteRecognizer:
@@ -24,8 +29,7 @@ class NoteRecognizer:
                                     samplerate=self.samplerate,
                                     callback=self._audio_callback)
         self.stream.start()
-        self.timer = time.time()
-        self.counter = 0
+        self.hz = 0
 
     def _audio_callback(self, indata, frames, time, status):
         """
@@ -50,15 +54,21 @@ class NoteRecognizer:
             self.data = np.roll(self.data, -shift, axis=0)
             self.data[-shift:, :] = data
 
-        val = 100 * np.max(self.data)
+        # Calculate wavelength
+        lengths = []
+        last_peak = 0
 
-        if val > 7:
-            self.counter += 1
+        for i, d in enumerate(self.data):
+            if np.max(d) > 0.07:
+                if last_peak != 0:
+                    last_peak = i
+                else:
+                    lengths.append(i - last_peak)
+                    last_peak = 0
 
-        # Check in every second
-        if time.time() - self.timer > 1:
-            self.timer = time.time()
-            print(self.counter)
-            self.counter = 0
+        if lengths != []:
+            wavelength = sum(lengths) / len(lengths)
+            if wavelength != 0:
+                self.hz = int(sol / wavelength)
 
-        return val
+        return self.hz

@@ -2,6 +2,7 @@ import winsound
 
 import pygame
 from pygame import locals as keys
+import numpy as np
 
 from src.note_recognizer import NoteRecognizer
 from src.config import IS_FULLSCREEN, WINDOW_WIDTH, WINDOW_HEIGHT, FPS
@@ -25,8 +26,8 @@ class Display:
         ]
         self.note_texts = [font.render(n, False, (37, 37, 37)) for n in self.note_names]
         self.pitch_lines = [
-            # ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
-            ((i * color_constant, i * color_constant, i * color_constant,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            ((255, i * color_constant, 50,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
+            #((i * color_constant, i * color_constant, i * color_constant,), (0, i * (self.line_height), WINDOW_WIDTH, self.line_height + 1)) for i in range(12)
         ]
         
         # Reverse lines to not overlap each other
@@ -49,5 +50,11 @@ class Display:
             text_coords = (pitch_line_coords[0] + WINDOW_WIDTH / 2 - len(self.note_names[i]) * 3, pitch_line_coords[1],)
             screen.blit(self.note_texts[i], text_coords)
 
-        print('Recognized note:', self.note_recognizer.update())
+        try:
+            hz = self.note_recognizer.update()
+            octave = abs(int(np.log2(hz / 440)))
+            note_index = int(12 * np.log2(hz / 440) / octave - 17.25 + 69)
 
+            print(f'({self.note_names[note_index % 12]}) : {octave}')
+        except OverflowError:
+            pass
