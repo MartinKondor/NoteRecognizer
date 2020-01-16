@@ -1,3 +1,4 @@
+import time
 import math
 
 import queue
@@ -7,7 +8,10 @@ import sounddevice as sd
 
 class NoteRecognizer:
 
-    def __init__(self, device=1, samplerate=44100, channels=2, downsample=10, window=1000):
+    def __init__(self, device=1, samplerate=44100, channels=2, downsample=10, window=1000, time_interval=0.01):
+        self.timer = time.time()
+        self.time_interval = time_interval
+
         self.device = device
         self.samplerate = samplerate
         self.channels = channels
@@ -36,12 +40,25 @@ class NoteRecognizer:
                 data = self.q.get_nowait()
             except queue.Empty:
                 break
-                
+
             shift = len(data)
             self.data = np.roll(self.data, -shift, axis=0)
             self.data[-shift:, :] = data
 
-        print(self.data)
+        if time.time() - self.timer >= self.time_interval:
+            self.timer = time.time()
+            # print(sum(sum(np.abs(self.data) > 0.1)) / self.channels)
+            
+            peak = np.max(self.data)
+            first_peak_index = np.argmax(self.data)
+
+            if first_peak_index > len(self.data):
+                return 0
+
+            second_peak_index = first_peak_index + np.argmax(self.data[first_peak_index + 1:])
+            wavelength = (second_peak_index - first_peak_index) * (self.time_interval / len(self.data))  # In seconds
+            hz = 1 / wavelength
+            return hz
 
         return 0
 
