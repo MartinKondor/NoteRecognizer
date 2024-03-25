@@ -57,7 +57,7 @@ class NoteRecognizer:
 
             second_peak_index = first_peak_index + np.argmax(self.data[first_peak_index + 1:])
             wavelength = (second_peak_index - first_peak_index) * (self.time_interval / len(self.data))  # In seconds
-            hz = 1 / wavelength
+            hz = (1 / wavelength) if wavelength != 0 else 0
             return hz
 
         return 0

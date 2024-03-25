@@ -1,6 +1,9 @@
-# NoteRecognizer
+<p align="center">
+    <img height=300 src=".github/live_plot.png">
+    <img height=300 src=".github/rec.png">
+</p>
 
-[![version](https://img.shields.io/badge/version-v0.1.0-red.svg)](https://github.com/MartinKondor/NoteRecognizer) [![Project Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/MartinKondor/NoteRecognizer) ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg) [![GitHub Issues](https://img.shields.io/github/issues/MartinKondor/NoteRecognizer.svg)](https://github.com/MartinKondor/NoteRecognizer/issues)
+# NoteRecognizer
 
 Note recognition from microphone.
 
